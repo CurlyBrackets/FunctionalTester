@@ -10,9 +10,21 @@ using System.Threading.Tasks;
 
 namespace FunctionalTester
 {
+    [Flags]
+    enum DisplayMode
+    {
+        None        = 0,
+        Errors      = 1,
+        Exceptions  = 2,
+        Success     = 4,
+        All         = (Errors | Exceptions | Success)
+    }
+
     class Program
     {
-        public const string PrerunFunction = "PreRun";
+        const string PrerunFunction = "PreRun";
+        const string PostrunFunction = "Postrun";
+
         private const ConsoleColor GoodColour = ConsoleColor.Green;
         private const ConsoleColor FailColour = ConsoleColor.Red;
         private const ConsoleColor IndeterminateColour = ConsoleColor.Yellow;
@@ -44,13 +56,16 @@ namespace FunctionalTester
         static void Run(IDictionary<string, InterpBase> functions, InterpEnvironment baseEnv)
         {
             if (functions.ContainsKey(PrerunFunction))
-                Run(PrerunFunction, functions[PrerunFunction], baseEnv);
+                Run(PrerunFunction, functions[PrerunFunction], baseEnv, DisplayMode.Errors | DisplayMode.Exceptions);
 
             foreach(var function in functions)
             {
                 if(ShouldRun(function.Key))
                     Run(function.Key, function.Value, baseEnv);
             }
+
+            if (functions.ContainsKey(PostrunFunction))
+                Run(PrerunFunction, functions[PostrunFunction], baseEnv, DisplayMode.Errors | DisplayMode.Exceptions);
         }
 
         static bool ShouldRun(string name)
@@ -58,30 +73,49 @@ namespace FunctionalTester
             return name.StartsWith("Test");
         }
 
-        static void Run(string name, InterpBase func, InterpEnvironment baseEnv)
+        static void Run(string name, InterpBase func, InterpEnvironment baseEnv, DisplayMode display = DisplayMode.All)
         {
-            Console.WriteLine(name);
             try
             {
                 func.Interp(baseEnv.Clone());
 
-                WriteColour("\t[Passed]", GoodColour);
+                if (display.HasFlag(DisplayMode.Success))
+                {
+                    Console.WriteLine(name);
+                    WriteColour("\t[Passed]", GoodColour);
+                }
             }
             catch(AssertFailException afe)
             {
-                WriteColour("\t[Failed]: " + afe.Message, FailColour);
+                if (display.HasFlag(DisplayMode.Errors))
+                {
+                    Console.WriteLine(name);
+                    WriteColour("\t[Failed]: " + afe.Message, FailColour);
+                }
             }
             catch(WrongTypeException wte)
             {
-                WriteColour("\t[Failed]: " + wte.Message, IndeterminateColour);
+                if (display.HasFlag(DisplayMode.Errors))
+                {
+                    Console.WriteLine(name);
+                    WriteColour("\t[Failed]: " + wte.Message, IndeterminateColour);
+                }
             }
             catch(UndefinedIdentifierException uie)
             {
-                WriteColour("\t[Failed]: " + uie.Message, IndeterminateColour);
+                if (display.HasFlag(DisplayMode.Errors))
+                {
+                    Console.WriteLine(name);
+                    WriteColour("\t[Failed]: " + uie.Message, IndeterminateColour);
+                }
             }
             catch(Exception ex)
             {
-                WriteColour("\t[Failed]: " + ex.Message, IndeterminateColour);
+                if (display.HasFlag(DisplayMode.Errors))
+                {
+                    Console.WriteLine(name);
+                    WriteColour("\t[Failed]: " + ex.Message, IndeterminateColour);
+                }
             }
         }
 
