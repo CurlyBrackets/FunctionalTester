@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FunctionalTester.InterpComponents
 {
@@ -21,7 +22,7 @@ namespace FunctionalTester.InterpComponents
 
         public override string ToString()
         {
-            return "\"" + Value + "\"";
+            return "\"" + Regex.Escape(Value) + "\"";
         }
     }
 }
