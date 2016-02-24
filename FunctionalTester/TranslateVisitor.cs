@@ -116,7 +116,11 @@ namespace FunctionalTester
         public override InterpBase VisitDisconnectExpr([NotNull] TesterParser.DisconnectExprContext context)
         {
             var conn = context.GetChild(1).Accept(this);
-            return new InterpDisconnect(conn);
+            InterpBase cleanup = null;
+            if (context.ChildCount > 2)
+                cleanup = context.GetChild(2).Accept(this);
+
+            return new InterpDisconnect(conn, cleanup);
         }
 
         public override InterpBase VisitSshExpr([NotNull] TesterParser.SshExprContext context)

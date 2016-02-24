@@ -55,9 +55,15 @@ namespace FunctionalTester.Wrapper
             Prepend += "cd " + DirName + "; ";
         }
 
-        public void Disconnect()
+        public void Disconnect(bool cleanup = true)
         {
-            SshClient.RunCommand(Prepend + "cd ..; rm -r " + DirName).Execute() ;
+            if(cleanup)
+                SshClient.RunCommand(Prepend + "cd ..; rm -r " + DirName).Execute() ;
+            else
+            {
+                string dest = "FunctionalTest-" + Info.Host;
+                var res = SshClient.RunCommand(Prepend + "cd ..; mv " + DirName + " " + dest).Execute();
+            }
 
             if (m_ssh != null)
             {

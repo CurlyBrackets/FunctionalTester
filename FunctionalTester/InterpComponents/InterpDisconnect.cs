@@ -9,19 +9,29 @@ namespace FunctionalTester.InterpComponents
     class InterpDisconnect : InterpBase
     {
         public InterpBase Value { get; private set; }
+        public InterpBase Cleanup { get; private set; }
 
-        public InterpDisconnect(InterpBase value)
+        public InterpDisconnect(InterpBase value, InterpBase cleanup)
         {
             Value = value;
+            Cleanup = cleanup;
         }
 
         public override InterpValue Interp(InterpEnvironment environment)
         {
             var conn = Value.Interp(environment);
-            if (conn.Type != ValueType.SshConnection)
-                throw new WrongTypeException(conn.Type, ValueType.SshConnection);
+            AssertType(conn.Type, ValueType.SshConnection);
 
-            conn.SshValue.Disconnect();
+            bool cleanup = true;
+            if (Cleanup != null)
+            {
+                var cleanupVal = Cleanup.Interp(environment);
+                AssertType(cleanupVal.Type, ValueType.Boolean);
+
+                cleanup = cleanupVal.BoolValue;
+            }
+
+            conn.SshValue.Disconnect(cleanup);
 
             return new InterpValue();
         }
