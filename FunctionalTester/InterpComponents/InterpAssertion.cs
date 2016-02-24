@@ -1,4 +1,4 @@
-﻿using FunctionalTester.Exceptions;
+﻿using FunctionalTester. Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,19 @@ namespace FunctionalTester.InterpComponents
                 throw new WrongTypeException(val.Type, ValueType.Boolean);
 
             if (!val.BoolValue)
-                throw new AssertFailException(Value);
+            {
+                if (Value is InterpEqual)
+                {
+                    var eq = Value as InterpEqual;
+                    var lval = eq.Left.Interp(environment);
+                    var rval = eq.Right.Interp(environment);
+
+                    throw new AssertFailException(Value, lval, rval);
+                }
+                else {
+                    throw new AssertFailException(Value);
+                }
+            }
 
             return new InterpValue();
         }

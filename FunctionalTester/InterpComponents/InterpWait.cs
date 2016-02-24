@@ -28,7 +28,7 @@ namespace FunctionalTester.InterpComponents
             }
 
             foreach (var val in evaled)
-                val.ProcessValue.WaitForExit();
+                val.ProcessValue.Process.WaitForExit();
 
             return new InterpValue();
         }

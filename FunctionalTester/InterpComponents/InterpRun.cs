@@ -15,6 +15,7 @@ namespace FunctionalTester.InterpComponents
         public InterpRun(InterpBase name, InterpBase args)
         {
             Name = name;
+            Args = args;
         }
 
         public override InterpValue Interp(InterpEnvironment environment)

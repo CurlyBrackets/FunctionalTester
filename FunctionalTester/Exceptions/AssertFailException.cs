@@ -10,10 +10,24 @@ namespace FunctionalTester.Exceptions
     {
         public InterpBase Value { get; private set; }
 
+        public bool IsDetailed { get; private set; }
+        public InterpValue Left { get; private set; }
+        public InterpValue Right { get; private set; }
+
         public AssertFailException(InterpBase value)
             : base("Assertion failed for: " + value)
         {
             Value = value;
+            IsDetailed = false;
+        }
+
+        public AssertFailException(InterpBase value, InterpValue left, InterpValue right)
+            : base("Assertion failed for: " + value + Environment.NewLine + "Left: " + left + Environment.NewLine + "Right: " + right)
+        {
+            IsDetailed = true;
+            Value = value;
+            Left = left;
+            Right = right;
         }
     }
 }

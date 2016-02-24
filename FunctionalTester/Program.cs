@@ -23,7 +23,7 @@ namespace FunctionalTester
     class Program
     {
         const string PrerunFunction = "PreRun";
-        const string PostrunFunction = "Postrun";
+        const string PostrunFunction = "PostRun";
 
         private const ConsoleColor GoodColour = ConsoleColor.Green;
         private const ConsoleColor FailColour = ConsoleColor.Red;
@@ -58,14 +58,35 @@ namespace FunctionalTester
             if (functions.ContainsKey(PrerunFunction))
                 Run(PrerunFunction, functions[PrerunFunction], baseEnv, DisplayMode.Errors | DisplayMode.Exceptions);
 
+            int passed = 0, total = 0;
+
             foreach(var function in functions)
             {
-                if(ShouldRun(function.Key))
-                    Run(function.Key, function.Value, baseEnv);
+                if (ShouldRun(function.Key))
+                {
+                    if (Run(function.Key, function.Value, baseEnv))
+                        passed++;
+                    total++;
+                }
             }
 
             if (functions.ContainsKey(PostrunFunction))
                 Run(PrerunFunction, functions[PostrunFunction], baseEnv, DisplayMode.Errors | DisplayMode.Exceptions);
+
+            if(total != 0)
+            {
+                var temp = Console.ForegroundColor;
+                if (passed == total)
+                    Console.ForegroundColor = GoodColour;
+                else if (passed / (double)total > 0.75)
+                    Console.ForegroundColor = IndeterminateColour;
+                else
+                    Console.ForegroundColor = FailColour;
+
+                Console.WriteLine();
+                Console.WriteLine($"\t{passed} / {total} ({passed / (double)total * 100}%) tests passed");
+                Console.ForegroundColor = temp;
+            }
         }
 
         static bool ShouldRun(string name)
@@ -73,7 +94,7 @@ namespace FunctionalTester
             return name.StartsWith("Test");
         }
 
-        static void Run(string name, InterpBase func, InterpEnvironment baseEnv, DisplayMode display = DisplayMode.All)
+        static bool Run(string name, InterpBase func, InterpEnvironment baseEnv, DisplayMode display = DisplayMode.All)
         {
             try
             {
@@ -84,6 +105,8 @@ namespace FunctionalTester
                     Console.WriteLine(name);
                     WriteColour("\t[Passed]", GoodColour);
                 }
+
+                return true;
             }
             catch(AssertFailException afe)
             {
@@ -117,6 +140,8 @@ namespace FunctionalTester
                     WriteColour("\t[Failed]: " + ex.Message, IndeterminateColour);
                 }
             }
+
+            return false;
         }
 
         static void WriteColour(string text, ConsoleColor col)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FunctionalTester.InterpComponents
 {
@@ -13,7 +14,7 @@ namespace FunctionalTester.InterpComponents
         public int IntValue { get; private set; }
         public bool BoolValue { get; private set; }
         public string StringValue { get; private set; }
-        public Process ProcessValue { get; private set; }
+        public ProcessWrapper ProcessValue { get; private set; }
 
         public InterpValue(int value)
         {
@@ -36,7 +37,7 @@ namespace FunctionalTester.InterpComponents
         public InterpValue(Process value)
         {
             Type = ValueType.Process;
-            ProcessValue = value;
+            ProcessValue = new ProcessWrapper(value);
         }
 
         public InterpValue()
@@ -79,6 +80,30 @@ namespace FunctionalTester.InterpComponents
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            string val = string.Empty;
+            switch (Type)
+            {
+                case ValueType.Boolean:
+                    val = BoolValue.ToString();
+                    break;
+                case ValueType.Integer:
+                    val = IntValue.ToString();
+                    break;
+                case ValueType.Null:
+                    break;
+                case ValueType.Process:
+                    val = ProcessValue.ToString();
+                    break;
+                case ValueType.String:
+                    val = '"' + Regex.Escape(StringValue) + '"';
+                    break;
+            }
+
+            return $"[{Type}] {val}";
         }
     }
 }

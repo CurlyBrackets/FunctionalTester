@@ -21,7 +21,7 @@ namespace FunctionalTester.InterpComponents
             if (proc.Type != ValueType.Process)
                 throw new WrongTypeException(proc.Type, ValueType.Process);
 
-            return new InterpValue(proc.ProcessValue.StandardOutput.ReadToEnd());
+            return new InterpValue(proc.ProcessValue.Output);
         }
 
         public override string ToString()

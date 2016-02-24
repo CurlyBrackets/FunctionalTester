@@ -64,7 +64,7 @@ IntegerLiteral : [0-9]+ ;
 
 fragment NEWLINE_CORE : ('\r\n' | '\n');
 fragment ESCAPED_QUOTE : '\\"';
-StringLiteral :   '"' ( ESCAPED_QUOTE | ~('\r' | '\n') )* '"';
+StringLiteral :   '"' ( ESCAPED_QUOTE | ~('\r' | '\n') )*? '"';
 
 NewlineLiteral : NEWLINE_CORE;
 MultilineElement : ~('{' | '[') ;

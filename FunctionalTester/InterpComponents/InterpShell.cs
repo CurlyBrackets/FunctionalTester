@@ -22,7 +22,10 @@ namespace FunctionalTester.InterpComponents
             if (value.Type != ValueType.String)
                 throw new WrongTypeException(value.Type, ValueType.String);
 
-            return new InterpValue(StartShell(value.StringValue));
+            var p = StartShell(value.StringValue);
+            p.WaitForExit();
+
+            return new InterpValue();
         }
 
         private Process StartShell(string val)
