@@ -41,7 +41,7 @@ namespace FunctionalTester.InterpComponents
             }
 
             using (var localStream = File.OpenRead(localVal.StringValue))
-                connVal.SshValue.ScpClient.Upload(localStream, remoteName);
+                connVal.SshValue.ScpClient.Upload(localStream, "./" + connVal.SshValue.DirName + "/" + remoteName);
 
             return new InterpValue();
         }

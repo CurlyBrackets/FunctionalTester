@@ -1,6 +1,7 @@
 ﻿using Renci.SshNet;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -42,15 +43,22 @@ namespace FunctionalTester.Wrapper
         }
 
         public string Prepend { get; private set; }
+        public string DirName { get; private set; }
 
         public ConnectionWrapper(ConnectionInfo info, string prepend)
         {
             Info = info;
             Prepend = prepend;
+            DirName = Path.GetRandomFileName();
+
+            var cmd = SshClient.RunCommand(Prepend + "mkdir " + DirName).Execute();
+            Prepend += "cd " + DirName + "; ";
         }
 
         public void Disconnect()
         {
+            SshClient.RunCommand(Prepend + "cd ..; rm -r " + DirName).Execute() ;
+
             if (m_ssh != null)
             {
                 m_ssh.Disconnect();
