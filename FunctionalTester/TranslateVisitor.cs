@@ -97,6 +97,17 @@ namespace FunctionalTester
             return new InterpEqual(left, right);
         }
 
+        public override InterpBase VisitConnectExpr([NotNull] TesterParser.ConnectExprContext context)
+        {
+            var addr = context.GetChild(1).Accept(this);
+            if(addr is InterpString)
+            {
+
+            }                
+
+            return new InterpConnect(addr);
+        }
+
         #endregion
 
         #region Statements

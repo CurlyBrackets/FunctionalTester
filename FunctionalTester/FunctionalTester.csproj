@@ -41,6 +41,10 @@
       <HintPath>..\packages\Antlr4.Runtime.4.3.0\lib\net40-client\Antlr4.Runtime.net40.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Renci.SshNet, Version=2013.4.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2013.4.7\lib\net40\Renci.SshNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,6 +61,7 @@
     <Compile Include="InterpComponents\InterpAssignment.cs" />
     <Compile Include="InterpComponents\InterpBase.cs" />
     <Compile Include="InterpComponents\InterpBool.cs" />
+    <Compile Include="InterpComponents\InterpConnect.cs" />
     <Compile Include="InterpComponents\InterpEnvironment.cs" />
     <Compile Include="InterpComponents\InterpEqual.cs" />
     <Compile Include="InterpComponents\InterpIdentifier.cs" />
@@ -73,6 +78,7 @@
     <Compile Include="ProcessWrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SshConnectionManager.cs" />
     <Compile Include="TranslateVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

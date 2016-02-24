@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Renci.SshNet;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace FunctionalTester.InterpComponents
         public bool BoolValue { get; private set; }
         public string StringValue { get; private set; }
         public ProcessWrapper ProcessValue { get; private set; }
+        public SshClient SshValue { get; private set; } 
 
         public InterpValue(int value)
         {
@@ -38,6 +40,12 @@ namespace FunctionalTester.InterpComponents
         {
             Type = ValueType.Process;
             ProcessValue = new ProcessWrapper(value);
+        }
+
+        public InterpValue(SshClient conn)
+        {
+            Type = ValueType.SshConnection;
+            SshValue = conn;
         }
 
         public InterpValue()
@@ -72,6 +80,8 @@ namespace FunctionalTester.InterpComponents
                     return ProcessValue == bVal.ProcessValue;
                 case ValueType.String:
                     return StringValue == bVal.StringValue;
+                case ValueType.SshConnection:
+                    return SshValue.Equals(bVal.SshValue);
                 default:
                     return false;
             }
@@ -100,6 +110,9 @@ namespace FunctionalTester.InterpComponents
                     break;
                 case ValueType.String:
                     val = '"' + Regex.Escape(StringValue) + '"';
+                    break;
+                case ValueType.SshConnection:
+                    val = SshValue.ConnectionInfo.Host;
                     break;
             }
 

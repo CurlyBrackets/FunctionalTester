@@ -34,6 +34,10 @@ expr: Identifier #IdentExpr
 	| RunToken expr expr? #RunExpr
 	| ShellToken expr #ShellExpr
 	| OpenParen expr CloseParen #ParenExpr
+	| ConnectToken expr #ConnectExpr
+	| DisconnectToken expr #DisconnectExpr
+	| SSHToken expr expr #SshExpr
+	| SCPToken expr expr expr? #ScpExpr
 ;
 
 multilineStringR : MultilineElement NewlineLiteral #MultilineString
@@ -47,6 +51,10 @@ WaitToken: 'wait' ;
 EqualToken: 'equal' ;
 RunToken: 'run' ;
 ShellToken: 'shell' ;
+ConnectToken: 'connect' ;
+DisconnectToken: 'disconnect' ;
+SSHToken: 'ssh' ;
+SCPToken: 'scp' ;
 
 OpenParen: '(' ;
 CloseParen: ')' ;

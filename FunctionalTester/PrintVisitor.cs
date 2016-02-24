@@ -185,6 +185,39 @@ namespace FunctionalTester
                 temp);
         }
 
+        public override string VisitConnectExpr([NotNull] TesterParser.ConnectExprContext context)
+        {
+            IndentLevel++;
+            var temp = VisitChildren(context);
+            IndentLevel--;
+
+            return string.Join(Environment.NewLine,
+                Indent() + "ConnectExpr: ",
+                temp);
+        }
+
+        public override string VisitDisconnectExpr([NotNull] TesterParser.DisconnectExprContext context)
+        {
+            IndentLevel++;
+            var temp = VisitChildren(context);
+            IndentLevel--;
+
+            return string.Join(Environment.NewLine,
+                Indent() + "DisconnectExpr: ",
+                temp);
+        }
+
+        public override string VisitScpExpr([NotNull] TesterParser.ScpExprContext context)
+        {
+            IndentLevel++;
+            var temp = VisitChildren(context);
+            IndentLevel--;
+
+            return string.Join(Environment.NewLine,
+                Indent() + "ScpExpr: ",
+                temp);
+        }
+
         #endregion
 
         #endregion

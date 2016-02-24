@@ -64,7 +64,7 @@ namespace FunctionalTester
             {
                 if (ShouldRun(function.Key))
                 {
-                    if (Run(function.Key, function.Value, baseEnv))
+                    if (Run(function.Key, function.Value, baseEnv.Clone()))
                         passed++;
                     total++;
                 }
@@ -94,11 +94,11 @@ namespace FunctionalTester
             return name.StartsWith("Test");
         }
 
-        static bool Run(string name, InterpBase func, InterpEnvironment baseEnv, DisplayMode display = DisplayMode.All)
+        static bool Run(string name, InterpBase func, InterpEnvironment env, DisplayMode display = DisplayMode.All)
         {
             try
             {
-                func.Interp(baseEnv.Clone());
+                func.Interp(env);
 
                 if (display.HasFlag(DisplayMode.Success))
                 {

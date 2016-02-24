@@ -11,6 +11,7 @@ namespace FunctionalTester.InterpComponents
         Integer,
         Boolean,
         Process,
-        String
+        String,
+        SshConnection,
     }
 }
