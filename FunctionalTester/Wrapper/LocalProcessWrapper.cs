@@ -33,7 +33,8 @@ namespace FunctionalTester.Wrapper
 
         private void DataReceived(object sender, DataReceivedEventArgs e)
         {
-            m_core.Append(e.Data);
+            if(e.Data != null)
+                m_core.Append(e.Data + "\n");
         }
 
         public void Wait()
