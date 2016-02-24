@@ -1,4 +1,5 @@
 ﻿using FunctionalTester.Exceptions;
+using FunctionalTester.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +47,7 @@ namespace FunctionalTester.InterpComponents
             }
 
             return new InterpValue(
-                Process.Start(startInfo));
+                new LocalProcessWrapper(Process.Start(startInfo)));
         }
 
         public override string ToString()

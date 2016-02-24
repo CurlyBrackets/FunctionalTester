@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace FunctionalTester
+namespace FunctionalTester.Wrapper
 {
-    class ProcessWrapper
+    class LocalProcessWrapper : IProcessWrapper
     {
         public Process Process { get; private set; }
 
@@ -19,7 +19,7 @@ namespace FunctionalTester
             }
         }
 
-        public ProcessWrapper(Process p)
+        public LocalProcessWrapper(Process p)
         {
             Process = p;
 
@@ -34,6 +34,17 @@ namespace FunctionalTester
         private void DataReceived(object sender, DataReceivedEventArgs e)
         {
             m_core.Append(e.Data);
+        }
+
+        public void Wait()
+        {
+            Process.WaitForExit();
+        }
+
+        public bool Kill()
+        {
+            Process.Kill();
+            return Process.HasExited;
         }
     }
 }

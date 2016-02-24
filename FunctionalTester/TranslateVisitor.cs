@@ -11,7 +11,6 @@ namespace FunctionalTester
     class TranslateVisitor : TesterBaseVisitor<InterpBase>
     {
         private Dictionary<string, InterpBase> m_core;
-
         public IDictionary<string, InterpBase> Functions {
             get
             {
@@ -19,10 +18,13 @@ namespace FunctionalTester
             }
         }
 
+        private SshAuthManager m_authManager;
+
         public InterpEnvironment BaseEnvironment { get; private set; }
 
-        public TranslateVisitor()
+        public TranslateVisitor(SshAuthManager authManager)
         {
+            m_authManager = authManager;
             m_core = new Dictionary<string, InterpBase>();
             BaseEnvironment = new InterpEnvironment();
         }
@@ -102,10 +104,38 @@ namespace FunctionalTester
             var addr = context.GetChild(1).Accept(this);
             if(addr is InterpString)
             {
+                //possibly add thing to m_authManager
+            }
+            InterpBase prepend = null;
+            if (context.ChildCount > 2)
+                prepend = context.GetChild(2).Accept(this);
 
-            }                
+            return new InterpConnect(m_authManager, addr, prepend);
+        }
 
-            return new InterpConnect(addr);
+        public override InterpBase VisitDisconnectExpr([NotNull] TesterParser.DisconnectExprContext context)
+        {
+            var conn = context.GetChild(1).Accept(this);
+            return new InterpDisconnect(conn);
+        }
+
+        public override InterpBase VisitSshExpr([NotNull] TesterParser.SshExprContext context)
+        {
+            var conn = context.GetChild(1).Accept(this);
+            var command = context.GetChild(2).Accept(this);
+
+            return new InterpSsh(conn, command);
+        }
+
+        public override InterpBase VisitScpExpr([NotNull] TesterParser.ScpExprContext context)
+        {
+            var conn = context.GetChild(1).Accept(this);
+            var localFile = context.GetChild(2).Accept(this);
+            InterpBase remoteFile = null;
+            if (context.ChildCount > 3)
+                remoteFile = context.GetChild(3).Accept(this);
+
+            return new InterpScp(conn, localFile, remoteFile);
         }
 
         #endregion

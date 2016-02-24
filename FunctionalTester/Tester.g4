@@ -34,7 +34,7 @@ expr: Identifier #IdentExpr
 	| RunToken expr expr? #RunExpr
 	| ShellToken expr #ShellExpr
 	| OpenParen expr CloseParen #ParenExpr
-	| ConnectToken expr #ConnectExpr
+	| ConnectToken expr expr? #ConnectExpr
 	| DisconnectToken expr #DisconnectExpr
 	| SSHToken expr expr #SshExpr
 	| SCPToken expr expr expr? #ScpExpr

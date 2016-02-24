@@ -1,4 +1,5 @@
 ﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using FunctionalTester.Exceptions;
 using FunctionalTester.InterpComponents;
 using System;
@@ -37,6 +38,7 @@ namespace FunctionalTester
                 return;
             }
 
+            IParseTree root = null;
             using (var fileStream = new StreamReader(args[0]))
             {
                 var inputStream = new AntlrInputStream(fileStream);
@@ -44,14 +46,23 @@ namespace FunctionalTester
                 var tokens = new CommonTokenStream(lexer);
                 var parser = new TesterParser(tokens);
 
-                var tree = parser.prog();
+                root = parser.prog();
 
-                var translator = new TranslateVisitor();
-                translator.Visit(tree);
-
-                Run(translator.Functions, translator.BaseEnvironment);
             }
+
+            var authManager = new SshAuthManager();
+            authManager.SetUserPrompt(GetUser);
+            authManager.SetPasswordPrompt(GetPassword);
+            authManager.SetRepeatPrompt(GetRepeat);
+            authManager.SetCachePrompt(GetCache);
+
+            var translator = new TranslateVisitor(authManager);
+            translator.Visit(root);
+
+            Run(translator.Functions, translator.BaseEnvironment);
         }
+
+        #region Running
 
         static void Run(IDictionary<string, InterpBase> functions, InterpEnvironment baseEnv)
         {
@@ -153,5 +164,63 @@ namespace FunctionalTester
 
             Console.ForegroundColor = temp;
         }
+
+        #endregion
+
+        #region Prompts
+
+        static string GetUser(string server)
+        {
+            Console.Write("Username for {0}: ", server);
+            return Console.ReadLine();
+        }
+
+        static byte[] GetPassword(string server)
+        {
+            Console.Write("Password: ");
+            var ret = new List<byte>();
+
+            ConsoleKeyInfo info;
+            do
+            {
+                info = Console.ReadKey(true);
+                if (info.Key != ConsoleKey.Enter)
+                    ret.Add(Convert.ToByte(info.KeyChar));
+            } while (info.Key != ConsoleKey.Enter);
+            Console.WriteLine();
+
+            return ret.ToArray();
+        }
+
+        static bool GetRepeat(string newHost, string oldHost)
+        {
+            while (true) {
+                Console.WriteLine("{0} uses the same domain a {1}. Reuse authentication? [Y/n] ", newHost, oldHost);
+                var read = Console.ReadLine();
+                if (read == string.Empty)
+                    return true;
+                else if (read.Equals("y", StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+                else if (read.Equals("n", StringComparison.InvariantCultureIgnoreCase))
+                    return false;
+            }
+        }
+
+        static bool GetCache()
+        {
+            while (true)
+            {
+                Console.WriteLine("Would you like to cache this info? [Y/n] ");
+                var read = Console.ReadLine();
+                if (read == string.Empty)
+                    return true;
+                else if (read.Equals("y", StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+                else if (read.Equals("n", StringComparison.InvariantCultureIgnoreCase))
+                    return false;
+            }
+        }
+
+        #endregion
     }
 }
