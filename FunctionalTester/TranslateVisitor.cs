@@ -51,6 +51,13 @@ namespace FunctionalTester
             return new InterpIdentifier(context.Identifier().GetText());
         }
 
+        public override InterpBase VisitMultilineExpr([NotNull] TesterParser.MultilineExprContext context)
+        {
+            var text = context.GetText();
+
+            return new InterpString(text.Substring(3, text.Length - 6).Replace(Environment.NewLine, "\n"));
+        }
+
         #endregion
 
         #region Nested Expressions
@@ -99,6 +106,29 @@ namespace FunctionalTester
             return new InterpEqual(left, right);
         }
 
+        public override InterpBase VisitOsExpr([NotNull] TesterParser.OsExprContext context)
+        {
+            var left = context.GetChild(1).Accept(this);
+            var right = context.GetChild(2).Accept(this);
+
+            return new InterpOs(left, right);
+        }
+
+        public override InterpBase VisitWriteExpr([NotNull] TesterParser.WriteExprContext context)
+        {
+            var left = context.GetChild(1).Accept(this);
+            var right = context.GetChild(2).Accept(this);
+
+            return new InterpWrite(left, right);
+        }
+
+        public override InterpBase VisitReadExpr([NotNull] TesterParser.ReadExprContext context)
+        {
+            var file = context.expr().Accept(this);
+
+            return new InterpRead(file);
+        }
+
         public override InterpBase VisitConnectExpr([NotNull] TesterParser.ConnectExprContext context)
         {
             var addr = context.GetChild(1).Accept(this);
@@ -140,6 +170,12 @@ namespace FunctionalTester
                 remoteFile = context.GetChild(3).Accept(this);
 
             return new InterpScp(conn, localFile, remoteFile);
+        }
+
+        public override InterpBase VisitNotExpr([NotNull] TesterParser.NotExprContext context)
+        {
+            var child = context.expr().Accept(this);
+            return new InterpNot(child);
         }
 
         #endregion
@@ -187,6 +223,17 @@ namespace FunctionalTester
             }
 
             return new InterpList(children);
+        }
+
+        public override InterpBase VisitAssignmentTop([NotNull] TesterParser.AssignmentTopContext context)
+        {
+            var name = context.Identifier().GetText();
+            var value = context.expr().Accept(this);
+
+            var val = value.Interp(BaseEnvironment);
+            BaseEnvironment[name] = val;
+
+            return null;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
+using System.Text.RegularExpressions;
 
 namespace FunctionalTester
 {
@@ -216,6 +217,35 @@ namespace FunctionalTester
             return string.Join(Environment.NewLine,
                 Indent() + "ScpExpr: ",
                 temp);
+        }
+
+        public override string VisitNotExpr([NotNull] TesterParser.NotExprContext context)
+        {
+            IndentLevel++;
+            var temp = VisitChildren(context);
+            IndentLevel--;
+
+            return string.Join(Environment.NewLine,
+                Indent() + "NotExpr: ",
+                temp);
+        }
+
+        public override string VisitAssignmentTop([NotNull] TesterParser.AssignmentTopContext context)
+        {
+            IndentLevel++;
+            var name = Indent() + "Identifier: " + context.Identifier().GetText();
+            var temp = VisitChildren(context);
+            IndentLevel--;
+
+            return string.Join(Environment.NewLine,
+                Indent() + "AssignmentTop",
+                name,
+                temp);
+        }
+
+        public override string VisitMultilineExpr([NotNull] TesterParser.MultilineExprContext context)
+        {
+            return Indent() + context.GetText();
         }
 
         #endregion

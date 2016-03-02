@@ -50,6 +50,9 @@ namespace FunctionalTester
 
             }
 
+            /* var printer = new PrintVisitor();
+            Console.WriteLine(printer.Visit(root)); */
+
             var authManager = new SshAuthManager();
             authManager.SetUserPrompt(GetUser);
             authManager.SetPasswordPrompt(GetPassword);

@@ -69,7 +69,10 @@
     <Compile Include="InterpComponents\InterpIdentifier.cs" />
     <Compile Include="InterpComponents\InterpInteger.cs" />
     <Compile Include="InterpComponents\InterpList.cs" />
+    <Compile Include="InterpComponents\InterpNot.cs" />
+    <Compile Include="InterpComponents\InterpOs.cs" />
     <Compile Include="InterpComponents\InterpOutput.cs" />
+    <Compile Include="InterpComponents\InterpRead.cs" />
     <Compile Include="InterpComponents\InterpRun.cs" />
     <Compile Include="InterpComponents\InterpScp.cs" />
     <Compile Include="InterpComponents\InterpShell.cs" />
@@ -77,6 +80,7 @@
     <Compile Include="InterpComponents\InterpString.cs" />
     <Compile Include="InterpComponents\InterpValue.cs" />
     <Compile Include="InterpComponents\InterpWait.cs" />
+    <Compile Include="InterpComponents\InterpWrite.cs" />
     <Compile Include="Wrapper\ConnectionWrapper.cs" />
     <Compile Include="Wrapper\IProcessWrapper.cs" />
     <Compile Include="Wrapper\RemoteProcessWrapper.cs" />
