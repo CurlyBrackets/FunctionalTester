@@ -61,7 +61,7 @@
 *	`read <filename> -> string`
 
 	Read a file into a string
-*	`write <filename> <content>
+*	`write <filename> <content> -> void`
 
 	Write content to a file named filename
 *	`osswitch <unix value> <windows value> -> type of which ever value`
