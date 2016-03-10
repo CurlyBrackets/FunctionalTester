@@ -184,6 +184,14 @@ namespace FunctionalTester
             return new InterpNot(child);
         }
 
+        public override InterpBase VisitTailExpr([NotNull] TesterParser.TailExprContext context)
+        {
+            var amount = context.GetChild(1).Accept(this);
+            var value = context.GetChild(2).Accept(this);
+
+            return new InterpTail(amount, value);
+        }
+
         #endregion
 
         #region Statements

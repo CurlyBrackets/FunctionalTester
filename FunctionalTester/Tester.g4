@@ -44,6 +44,7 @@ expr: Identifier #IdentExpr
 	| ReadToken expr #ReadExpr
 	| WriteToken expr expr #WriteExpr
 	| KillToken expr #KillExpr
+	| TailToken expr expr #TailExpr
 ;
 
 WhiteSpace: [ \t]+ -> channel(HIDDEN);
@@ -62,6 +63,7 @@ OSToken: 'osswitch' ;
 ReadToken: 'read' ;
 WriteToken: 'write' ;
 KillToken: 'kill' ;
+TailToken: 'tail' ;
 
 OpenParen: '(' ;
 CloseParen: ')' ;

@@ -79,6 +79,7 @@
     <Compile Include="InterpComponents\InterpShell.cs" />
     <Compile Include="InterpComponents\InterpSsh.cs" />
     <Compile Include="InterpComponents\InterpString.cs" />
+    <Compile Include="InterpComponents\InterpTail.cs" />
     <Compile Include="InterpComponents\InterpValue.cs" />
     <Compile Include="InterpComponents\InterpWait.cs" />
     <Compile Include="InterpComponents\InterpWrite.cs" />
