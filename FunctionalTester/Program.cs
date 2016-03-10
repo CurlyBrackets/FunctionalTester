@@ -85,7 +85,7 @@ namespace FunctionalTester
             }
 
             if (functions.ContainsKey(PostrunFunction))
-                Run(PrerunFunction, functions[PostrunFunction], baseEnv, DisplayMode.Errors | DisplayMode.Exceptions);
+                Run(PostrunFunction, functions[PostrunFunction], baseEnv, DisplayMode.Errors | DisplayMode.Exceptions);
 
             if(total != 0)
             {

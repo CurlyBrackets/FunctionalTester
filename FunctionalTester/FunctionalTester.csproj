@@ -68,6 +68,7 @@
     <Compile Include="InterpComponents\InterpEqual.cs" />
     <Compile Include="InterpComponents\InterpIdentifier.cs" />
     <Compile Include="InterpComponents\InterpInteger.cs" />
+    <Compile Include="InterpComponents\InterpKill.cs" />
     <Compile Include="InterpComponents\InterpList.cs" />
     <Compile Include="InterpComponents\InterpNot.cs" />
     <Compile Include="InterpComponents\InterpOs.cs" />

@@ -43,6 +43,7 @@ expr: Identifier #IdentExpr
 	| OSToken expr expr #OsExpr
 	| ReadToken expr #ReadExpr
 	| WriteToken expr expr #WriteExpr
+	| KillToken expr #KillExpr
 ;
 
 WhiteSpace: [ \t]+ -> channel(HIDDEN);
@@ -60,6 +61,7 @@ SCPToken: 'scp' ;
 OSToken: 'osswitch' ;
 ReadToken: 'read' ;
 WriteToken: 'write' ;
+KillToken: 'kill' ;
 
 OpenParen: '(' ;
 CloseParen: ')' ;

@@ -44,7 +44,8 @@ namespace FunctionalTester.Wrapper
 
         public bool Kill()
         {
-            Process.Kill();
+            if(!Process.HasExited)
+                Process.Kill();
             return Process.HasExited;
         }
     }

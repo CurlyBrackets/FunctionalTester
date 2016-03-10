@@ -129,6 +129,12 @@ namespace FunctionalTester
             return new InterpRead(file);
         }
 
+        public override InterpBase VisitKillExpr([NotNull] TesterParser.KillExprContext context)
+        {
+            var target = context.expr().Accept(this);
+            return new InterpKill(target);
+        }
+
         public override InterpBase VisitConnectExpr([NotNull] TesterParser.ConnectExprContext context)
         {
             var addr = context.GetChild(1).Accept(this);
