@@ -45,6 +45,7 @@ expr: Identifier #IdentExpr
 	| WriteToken expr expr #WriteExpr
 	| KillToken expr #KillExpr
 	| TailToken expr expr #TailExpr
+	| RemoveToken expr #RemoveExpr
 ;
 
 WhiteSpace: [ \t]+ -> channel(HIDDEN);
@@ -64,6 +65,7 @@ ReadToken: 'read' ;
 WriteToken: 'write' ;
 KillToken: 'kill' ;
 TailToken: 'tail' ;
+RemoveToken: 'remove' ;
 
 OpenParen: '(' ;
 CloseParen: ')' ;

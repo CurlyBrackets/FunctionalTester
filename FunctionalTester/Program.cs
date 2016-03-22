@@ -25,6 +25,8 @@ namespace FunctionalTester
     {
         const string PrerunFunction = "PreRun";
         const string PostrunFunction = "PostRun";
+        const string BeforeFunction = "Before";
+        const string AfterFunction = "After";
 
         private const ConsoleColor GoodColour = ConsoleColor.Green;
         private const ConsoleColor FailColour = ConsoleColor.Red;
@@ -72,14 +74,28 @@ namespace FunctionalTester
             if (functions.ContainsKey(PrerunFunction))
                 Run(PrerunFunction, functions[PrerunFunction], baseEnv, DisplayMode.Errors | DisplayMode.Exceptions);
 
+            InterpBase beforeFunc = null, afterFunc = null;
+            if (functions.ContainsKey(BeforeFunction))
+                beforeFunc = functions[BeforeFunction];
+            if (functions.ContainsKey(AfterFunction))
+                afterFunc = functions[AfterFunction];
+
             int passed = 0, total = 0;
 
             foreach(var function in functions)
             {
                 if (ShouldRun(function.Key))
                 {
-                    if (Run(function.Key, function.Value, baseEnv.Clone()))
+                    var env = baseEnv.Clone();
+                    if(beforeFunc != null)
+                        Run(BeforeFunction, beforeFunc, env, DisplayMode.Errors | DisplayMode.Exceptions);
+
+                    if (Run(function.Key, function.Value, env))
                         passed++;
+
+                    if (afterFunc != null)
+                        Run(AfterFunction, afterFunc, env, DisplayMode.Errors | DisplayMode.Exceptions);
+
                     total++;
                 }
             }

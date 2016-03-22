@@ -83,6 +83,12 @@ namespace FunctionalTester
             return new InterpShell(command);
         }
 
+        public override InterpBase VisitRemoveExpr([NotNull] TesterParser.RemoveExprContext context)
+        {
+            var glob = context.expr().Accept(this);
+            return new InterpRemove(glob);
+        }
+
         public override InterpBase VisitOutputExpr([NotNull] TesterParser.OutputExprContext context)
         {
             var proc = context.expr().Accept(this);

@@ -74,6 +74,7 @@
     <Compile Include="InterpComponents\InterpOs.cs" />
     <Compile Include="InterpComponents\InterpOutput.cs" />
     <Compile Include="InterpComponents\InterpRead.cs" />
+    <Compile Include="InterpComponents\InterpRemove.cs" />
     <Compile Include="InterpComponents\InterpRun.cs" />
     <Compile Include="InterpComponents\InterpScp.cs" />
     <Compile Include="InterpComponents\InterpShell.cs" />
